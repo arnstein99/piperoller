@@ -6,7 +6,7 @@ using namespace std;
 
 namespace // anonymous
 {
-    volatile std::sig_atomic_t gSignalStatus;
+    volatile sig_atomic_t gSignalStatus;
     unsigned int sequence = 0;
 
     void usage()
@@ -31,7 +31,7 @@ namespace // anonymous
     int roll(const string& basename, unsigned int& seq, ofstream& strm)
     {
         strm.close();
-	return init (basename, seq++, strm);
+	return init (basename, ++seq, strm);
     }
 }
 
@@ -59,7 +59,7 @@ int main (int argc, char* argv[])
         if (gSignalStatus)
 	{
 	    if (roll(argv[1], sequence, outp) != 0) return 1;
-	    cout << "Will roll" << argv[1] << endl;
+	    cout << "Will roll " << argv[1] << endl;
 	    gSignalStatus = 0;
 	}
 	outp << line << endl;
