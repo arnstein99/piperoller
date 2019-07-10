@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <stdio.h>
 using namespace std;
 
 namespace // anonymous
@@ -53,15 +54,22 @@ int main (int argc, char* argv[])
 
     signal (SIGHUP, signal_handler);
 
-    string line;
-    while (getline (cin, line))
+    int chr;
+    while ((chr = getchar()) != EOF)
     {
-        if (gSignalStatus)
+	if (chr == '\n')
 	{
-	    if (roll(argv[1], sequence, outp) != 0) return 1;
-	    cout << "Will roll " << argv[1] << endl;
-	    gSignalStatus = 0;
+	    outp << endl;
+	    if (gSignalStatus)
+	    {
+		if (roll(argv[1], sequence, outp) != 0) return 1;
+		cout << "Will roll " << argv[1] << endl;
+		gSignalStatus = 0;
+	    }
 	}
-	outp << line << endl;
+	else
+	{
+	    outp << static_cast<char>(chr);
+	}
     }
 }
