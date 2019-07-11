@@ -8,7 +8,6 @@ using namespace std;
 namespace // anonymous
 {
     volatile sig_atomic_t gSignalStatus;
-    unsigned int sequence = 0;
 
     void usage()
     {
@@ -49,17 +48,23 @@ int main (int argc, char* argv[])
         usage();
 	return 1;
     }
+
+    // Open first output file
+    unsigned int sequence = 0;
     ofstream outp;
     if (init (argv[1], sequence, outp) != 0) return 1;
 
+    // Start handling the hang-up signal
     signal (SIGHUP, signal_handler);
 
+    // Loop over input characters
     int chr;
     while ((chr = getchar()) != EOF)
     {
 	if (chr == '\n')
 	{
 	    outp << endl;
+	    // Handle any signals that have come in since last line feed
 	    if (gSignalStatus)
 	    {
 		if (roll(argv[1], sequence, outp) != 0) return 1;
