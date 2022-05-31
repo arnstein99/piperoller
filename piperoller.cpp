@@ -11,7 +11,7 @@ namespace // anonymous
 
     void usage()
     {
-        cerr << "Usage: logroller basename" << endl;
+        cerr << "Usage: piperoller basename" << endl;
     }
 
     int init(const string& basename, unsigned int seq, ofstream& strm)
