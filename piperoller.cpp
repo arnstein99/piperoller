@@ -28,10 +28,32 @@ namespace // anonymous
         return 0;
     }
 
+std::string my_time(void)
+{
+        time_t tt;
+        struct tm tm;
+        char buf[128];
+        if ((tt = time (NULL)) == -1)
+        {
+            perror ("time failed");
+            pthread_exit (NULL);
+        }
+        tm = *localtime (&tt);
+        snprintf (buf, sizeof(buf), "%04d/%02d/%02d %02d:%02d:%02d",
+            tm.tm_year+1900, tm.tm_mon+1, tm.tm_mday,
+        tm.tm_hour, tm.tm_min, tm.tm_sec);
+        return std::string(buf);
+    }
+
     int roll(const string& basename, unsigned int& seq, ofstream& strm)
     {
         strm.close();
-	return init (basename, ++seq, strm);
+	int retval = init (basename, ++seq, strm);
+        if (retval == 0)
+        {
+            strm << my_time() << " *** piperoller ***" << std::endl;
+        }
+        return retval;
     }
 }
 
