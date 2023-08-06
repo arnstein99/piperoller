@@ -17,19 +17,19 @@ namespace // anonymous
     int init(const string& basename, unsigned int seq, ofstream& strm)
     {
         stringstream sstr;
-	sstr << basename << '.' << seq;
-	strm.open(sstr.str());
-	if (!strm)
-	{
-	    cerr << "Failed to open file \"" << sstr.str() << "\" for writing"
-	         << endl;
-	    return 1;
-	}
+        sstr << basename << '.' << seq;
+        strm.open(sstr.str());
+        if (!strm)
+        {
+            cerr << "Failed to open file \"" << sstr.str() << "\" for writing"
+                 << endl;
+            return 1;
+        }
         return 0;
     }
 
-std::string my_time(void)
-{
+    std::string my_time(void)
+    {
         time_t tt;
         struct tm tm;
         char buf[128];
@@ -49,14 +49,14 @@ std::string my_time(void)
     {
         strm << my_time() << " *** piperoller ***" << std::endl;
         strm.close();
-	int retval = init (basename, ++seq, strm);
+        int retval = init (basename, ++seq, strm);
         if (retval == 0)
         {
             strm << my_time() << " *** piperoller ***" << std::endl;
         }
         return retval;
     }
-}
+} // namespace (anonymous)
 
 extern "C" void signal_handler (int signal)
 {
@@ -69,7 +69,7 @@ int main (int argc, char* argv[])
     if (argc != 2)
     {
         usage();
-	return 1;
+        return 1;
     }
 
     // Open first output file
@@ -84,20 +84,19 @@ int main (int argc, char* argv[])
     int chr;
     while ((chr = getchar()) != EOF)
     {
-	if (chr == '\n')
-	{
-	    outp << endl;
-	    // Handle any signals that have come in since last line feed
-	    if (gSignalStatus)
-	    {
-		if (roll(argv[1], sequence, outp) != 0) return 1;
-		cout << "Will roll " << argv[1] << endl;
-		gSignalStatus = 0;
-	    }
-	}
-	else
-	{
-	    outp << static_cast<char>(chr);
-	}
+        if (chr == '\n')
+        {
+            outp << endl;
+            // Handle any signals that have come in since last line feed
+            if (gSignalStatus)
+            {
+                if (roll(argv[1], sequence, outp) != 0) return 1;
+                gSignalStatus = 0;
+            }
+        }
+        else
+        {
+            outp << static_cast<char>(chr);
+        }
     }
 }
