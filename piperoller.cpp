@@ -47,6 +47,7 @@ std::string my_time(void)
 
     int roll(const string& basename, unsigned int& seq, ofstream& strm)
     {
+        strm << my_time() << " *** piperoller ***" << std::endl;
         strm.close();
 	int retval = init (basename, ++seq, strm);
         if (retval == 0)
