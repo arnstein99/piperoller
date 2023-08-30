@@ -1,7 +1,6 @@
 #include <csignal>
-#include <iostream>
 #include <fstream>
-#include <sstream>
+#include <iostream>
 #include <stdio.h>
 using namespace std;
 
@@ -16,12 +15,11 @@ namespace // anonymous
 
     int init(const string& basename, unsigned int seq, ofstream& strm)
     {
-        stringstream sstr;
-        sstr << basename << '.' << seq;
-        strm.open(sstr.str());
+        string filename(basename + "." + to_string(seq));
+        strm.open(filename);
         if (!strm)
         {
-            cerr << "Failed to open file \"" << sstr.str() << "\" for writing"
+            cerr << "Failed to open file \"" << filename << "\" for writing"
                  << endl;
             return 1;
         }
@@ -99,4 +97,5 @@ int main (int argc, char* argv[])
             outp << static_cast<char>(chr);
         }
     }
+    return 0;
 }
