@@ -10,10 +10,10 @@ namespace // anonymous
 
     void usage()
     {
-        cerr << "Usage: piperoller basename" << endl;
+        cerr << "Usage: piperoller basename [starting_number]" << endl;
     }
 
-    int init(const string& basename, unsigned int seq, ofstream& strm)
+    int init(const string& basename, int seq, ofstream& strm)
     {
         string filename(basename + "." + to_string(seq));
         strm.open(filename);
@@ -43,7 +43,7 @@ namespace // anonymous
         return std::string(buf);
     }
 
-    int roll(const string& basename, unsigned int& seq, ofstream& strm)
+    int roll(const string& basename, int& seq, ofstream& strm)
     {
         strm << my_time() << " *** piperoller ***" << std::endl;
         strm.close();
@@ -64,14 +64,27 @@ extern "C" void signal_handler (int signal)
 int main (int argc, char* argv[])
 {
     // Process inputs
-    if (argc != 2)
+    if ((argc != 2) && (argc != 3))
     {
         usage();
         return 1;
     }
 
     // Open first output file
-    unsigned int sequence = 0;
+    int sequence = 0;
+    if (argc == 3)
+    {
+        if (sscanf (argv[2], "%d", &sequence) != 1)
+        {
+            cerr << "Error: illegal numeric expression \"" << argv[2] <<
+                "\"" << endl;
+            exit (1);
+        }
+        if (sequence < 0)
+        {
+            cerr << "Warning: sequence start will be negative" << endl;
+        }
+    }
     ofstream outp;
     if (init (argv[1], sequence, outp) != 0) return 1;
 
