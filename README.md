@@ -1,7 +1,7 @@
 # piperoller
 Linux pipe that rolls through log file versions in response to signal HUP.
 
-Usage: piperoller file_base_name
+Usage: piperoller file_base_name [starting_number]
 
 Example:
 
